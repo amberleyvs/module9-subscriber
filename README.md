@@ -11,3 +11,19 @@ The first guest is the username used to connect to RabbitMQ.
 The second guest is the password used to connect to RabbitMQ.
 
 localhost:5672 means the RabbitMQ server is running on the local computer, and the application connects to it through port 5672. Port 5672 is the default port used by RabbitMQ for AMQP communication.
+
+### Simulation Slow Subscriber
+
+![Slow Subscriber Queue](images/slow-subscriber.png)
+
+In this experiment, I simulated a slow subscriber by adding a 1 second delay in the subscriber program.
+
+I ran the publisher several times quickly. Each publisher run sends 5 messages to RabbitMQ. Because the subscriber processes messages slowly, the messages are not consumed immediately and they temporarily accumulate in the queue.
+
+In my RabbitMQ dashboard, the total number of queued messages reached 36.
+
+This happened because the publisher sent messages faster than the subscriber could process them. The subscriber only processes around 1 message per second because of the added delay, while the publisher can send multiple messages almost instantly. Therefore, RabbitMQ stored the remaining messages in the queue.
+
+The number is 36 because some messages had already been consumed by the subscriber while I was checking the RabbitMQ dashboard. If I ran the publisher more times or checked the dashboard earlier, the total queue could be higher. If I waited longer, the total queue would decrease because the subscriber would continue processing the messages one by one.
+
+This shows that RabbitMQ helps handle slow consumers by keeping unprocessed events in a queue until the subscriber is ready to process them.
