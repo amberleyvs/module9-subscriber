@@ -1,21 +1,13 @@
-## Questions
+# Tutorial A: Event-Driven Architecture
 
-**a. How much data will the publisher program send to the message broker in one run?**
+**1. What is AMQP?**
 
-The publisher program will send 5 data messages to the message broker in one run.
+AMQP stands for Advanced Message Queuing Protocol. It is a messaging protocol used by applications to communicate through a message broker. In this tutorial, AMQP is used so the publisher and subscriber can communicate through RabbitMQ without directly calling each other.
 
-This happens because the program calls `publish_event` five times. Each `publish_event` call sends one `UserCreatedEventMessage` to RabbitMQ through the `user_created` queue.
+**2. What does it mean? guest:guest@localhost:5672 , what is the first guest, and what is the second guest, and what is localhost:5672 is for?**
 
-**b. The URL `amqp://guest:guest@localhost:5672` is the same as in the subscriber program. What does it mean?**
+The first guest is the username used to connect to RabbitMQ.
 
-It means that both the publisher and subscriber connect to the same RabbitMQ message broker.
+The second guest is the password used to connect to RabbitMQ.
 
-In the URL:
-
-- `amqp://` means the program uses the AMQP protocol.
-- The first `guest` is the username.
-- The second `guest` is the password.
-- `localhost` means RabbitMQ is running on the same computer.
-- `5672` is the default port used by RabbitMQ for AMQP communication.
-
-Because the publisher and subscriber use the same URL, the publisher can send messages to RabbitMQ, and the subscriber can receive messages from the same RabbitMQ broker.
+localhost:5672 means the RabbitMQ server is running on the local computer, and the application connects to it through port 5672. Port 5672 is the default port used by RabbitMQ for AMQP communication.
