@@ -49,3 +49,20 @@ This demonstrates one benefit of event-driven architecture. When the system has 
 One thing that can be improved from the code is the use of `loop {}` in the subscriber. It keeps the subscriber running, but it is not the best approach because it may waste CPU resources. A better implementation should use a proper blocking mechanism or async runtime.
 
 Another improvement is error handling. The code currently uses `unwrap()` when creating the RabbitMQ listener and publisher. If RabbitMQ is not running or the connection fails, the program will panic. It would be better to handle the error and show a clearer message.
+
+## Bonus: Simulation Slow Subscriber on Cloud
+
+![Cloud Slow Subscriber](images/cloud-slow-subscriber.png)
+
+In this bonus experiment, I used RabbitMQ running on an AWS EC2 cloud instance instead of my local machine.
+
+The subscriber was connected to the cloud RabbitMQ broker using this AMQP URL format:
+
+```txt
+amqp://amber:<password>@100.30.183.35:5672
+```
+To simulate a slow subscriber, I added a 1 second delay before processing each message. Then I ran the publisher several times quickly. Each publisher run sent 5 messages to RabbitMQ. In my experiment, the queue reached 40 messages.
+
+This happened because the publisher sent messages faster than the slow subscriber could consume them. Since the subscriber had a 1 second delay for each message, RabbitMQ kept the remaining messages in the queue until the subscriber was ready to process them.
+
+This shows that RabbitMQ can handle slow consumers even when the message broker runs on a cloud server. The publisher can keep sending events, while RabbitMQ stores the unprocessed events in the queue.
